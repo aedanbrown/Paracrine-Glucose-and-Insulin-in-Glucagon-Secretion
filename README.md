@@ -1,4 +1,4 @@
-# Paracrine_Interactions_In_Vitro
+# Paracrine Glucose and Insulin in Glucagon Secretion
  This repository contains the code used to develop the figures in the paper.
 
 ## Running the code
