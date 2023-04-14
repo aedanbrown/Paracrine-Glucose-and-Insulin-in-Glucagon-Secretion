@@ -2,7 +2,7 @@
  This repository contains the code used to develop the figures in the paper.
 
 ## Running the code
- The code used to generate the data in Figures 3 throguh 5 and Supplemental Figures 4 and 5 are in the Simulations folders. To run the code within these folders, code from the Base Models and Simulate Functions must be copied into the same folder as the main code. The table below shows the files that must be copied for each file in Curvefitting and Simulations.
+ The code used to generate the data in Figures 3 through 5 and Supplemental Figures 4 and 5 are in the Simulations folders. To run the code within these folders, code from the Base Models and Simulate Functions must be copied into the same folder as the main code. The table below shows the files that must be copied for each file in Curvefitting and Simulations.
 
 |File| Description| Additional Files|
 |--- | --- | --- |
