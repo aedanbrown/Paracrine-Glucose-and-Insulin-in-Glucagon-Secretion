@@ -110,18 +110,18 @@ t = 0:0.1:60; %min - time range to examine
 
 n = length(g_up_vals);
 
-S_I = zeros(length(g_up_vals),1);
-S_G = zeros(length(g_up_vals),1);
+R_I = zeros(length(g_up_vals),1);
+R_G = zeros(length(g_up_vals),1);
 
 for i = 1:n
 
     g_t_in = @(t) g_in_0.*18.016 + (t > 0).*(g_up_vals(i) - g_in_0).*18.016;
     [~,results] = simulate_alphaBetaModel_perfusion(params_,g_t_in,G_t_in,I_t_in,t);
     
-    S_I(i) = (results(end,1) - results(1,1)).*V_P_ - Q_.*trapz(t,I_t_in(t)) + Q_.*trapz(t,results(:,1));
+    R_I(i) = (results(end,1) - results(1,1)).*V_P_ - Q_.*trapz(t,I_t_in(t)) + Q_.*trapz(t,results(:,1));
         %Because I_t_in is a function of time, need to calculate insulin
         %secretion by integrating the mass balance
-    S_G(i) = (results(end,2) - results(1,2)).*V_P_ - Q_.*trapz(t,G_t_in(t)) + Q_.*trapz(t,results(:,2));
+    R_G(i) = (results(end,2) - results(1,2)).*V_P_ - Q_.*trapz(t,G_t_in(t)) + Q_.*trapz(t,results(:,2));
         %Because G_t_in is a function of time, need to calculate glucagon
         %secretion by integrating the mass balance
     

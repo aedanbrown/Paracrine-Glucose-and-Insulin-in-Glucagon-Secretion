@@ -108,8 +108,8 @@ I_t_in = @(t) (t > 0).*I_t_in_c;
 t = 0:0.1:60;
 
 
-S_I_results = zeros(11,32);
-S_G_results = zeros(11,32);
+R_I_results = zeros(11,32);
+R_G_results = zeros(11,32);
 multipliers = [2/3 3/4 4/5 5/6 9/10 1 10/9 6/5 5/4 4/3 3/2];
     %Will multiply each parameter by this value
 g_t_in = @(t) g_in_0.*18.016 + (t > 0).*(g_up_val - g_in_0).*18.016;
@@ -125,10 +125,10 @@ for i = 4:35 %First three parameters are basal levels
         [~,y] = simulate_alphaBetaModel_perfusion(params_adj,g_t_in,G_t_in,I_t_in,t);
             %Run the simulation
     
-        S_I_results(j,i-3) = (y(end,1) - y(1,1)).*V_P_ - Q_.*trapz(t,I_t_in(t)) + Q_.*trapz(t,y(:,1));
+        R_I_results(j,i-3) = (y(end,1) - y(1,1)).*V_P_ - Q_.*trapz(t,I_t_in(t)) + Q_.*trapz(t,y(:,1));
             %Because I_t_in is a function of time, need to calculate insulin
             %secretion by integrating the mass balance
-        S_G_results(j,i-3) = (y(end,2) - y(1,2)).*V_P_ - Q_.*trapz(t,G_t_in(t)) + Q_.*trapz(t,y(:,2));
+        R_G_results(j,i-3) = (y(end,2) - y(1,2)).*V_P_ - Q_.*trapz(t,G_t_in(t)) + Q_.*trapz(t,y(:,2));
             %Because G_t_in is a function of time, need to calculate glucagon
             %secretion by integrating the mass balance
 

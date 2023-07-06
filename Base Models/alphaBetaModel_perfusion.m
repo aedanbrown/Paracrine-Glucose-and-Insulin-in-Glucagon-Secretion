@@ -54,22 +54,22 @@ function dydt = alphaBetaModel_perfusion(t,y,p,g_t_in,G_t_in,I_t_in)
     X_A = Y_A(X_gA,X_I,h_IA,n_IA,X_A0,m_g);
 
     %Steady-state secretion
-    S_Iss_ = S_Iss(X_B,m_I,h_I,n_I);
-    S_Gss_ = S_Gss(X_A,m_G,h_G,n_G);
+    R_Iss_ = R_Iss(X_B,m_I,h_I,n_I);
+    R_Gss_ = R_Gss(X_A,m_G,h_G,n_G);
 
     %Transient secretion
-    dI_1 = S_Iss_ - hill(X_B,m_I1,h_I1,n_I1).*I_1;
+    dI_1 = R_Iss_ - hill(X_B,m_I1,h_I1,n_I1).*I_1;
     dI_2 = hill(X_B,m_I1,h_I1,n_I1).*I_1 - hill(X_B,m_I2,h_I2,n_I2).*I_2;
-    S_I = hill(X_B,m_I2,h_I2,n_I2).*I_2;
+    R_I = hill(X_B,m_I2,h_I2,n_I2).*I_2;
 
-    dG_1 = S_Gss_ - hill(X_A,m_G1,h_G1,n_G1).*G_1;
+    dG_1 = R_Gss_ - hill(X_A,m_G1,h_G1,n_G1).*G_1;
     dG_2 = hill(X_A,m_G1,h_G1,n_G1).*G_1 - hill(X_A,m_G2,h_G2,n_G2).*G_2;
-    S_G = hill(X_A,m_G2,h_G2,n_G2).*G_2;
+    R_G = hill(X_A,m_G2,h_G2,n_G2).*G_2;
 
     
     %Mass balances - perfusion
-    dI = Q/V_P.*(I_t_in(t) - I) + S_I./V_P;
-    dG = Q/V_P.*(G_t_in(t) - G) + S_G./V_P; 
+    dI = Q/V_P.*(I_t_in(t) - I) + R_I./V_P;
+    dG = Q/V_P.*(G_t_in(t) - G) + R_G./V_P; 
     dg = Q./V_P.*(g_t_in(t) - g); %No glucose generation
 
     
@@ -79,13 +79,13 @@ function dydt = alphaBetaModel_perfusion(t,y,p,g_t_in,G_t_in,I_t_in)
 end
 
 % Additional functions
-function s = S_Gss(X_a,m_a,h_a,n_a)
-    %S_Gss represents the steady-state glucagon secretion function
+function s = R_Gss(X_a,m_a,h_a,n_a)
+    %R_Gss represents the steady-state glucagon secretion function
     s = hill(X_a,m_a,h_a,n_a); %mg/min/islet
 end 
 
-function s = S_Iss(X_b,m_b,h_b,n_b)
-    %S_Iss represents the steady-state insulin secretion function
+function s = R_Iss(X_b,m_b,h_b,n_b)
+    %R_Iss represents the steady-state insulin secretion function
     s = hill(X_b,m_b,h_b,n_b); %mg/min/islet
 end
 

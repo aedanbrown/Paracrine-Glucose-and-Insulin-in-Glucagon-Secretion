@@ -49,14 +49,14 @@ function [t,y] = simulate_alphaBetaModel_perfusion(params,g_t_in,G_t_in,I_t_in,t
     X_A_0 = Y_A(X_gA_0,X_I_0,h_IA_,n_IA_,X_A0_,m_g_);
 
     %Initial steady-state secretion rates
-    S_Iss_0 = S_Iss(X_B_0,m_I_,h_I_,n_I_);
-    S_Gss_0 = S_Gss(X_A_0,m_G_,h_G_,n_G_);
+    R_Iss_0 = R_Iss(X_B_0,m_I_,h_I_,n_I_);
+    R_Gss_0 = R_Gss(X_A_0,m_G_,h_G_,n_G_);
 
     %Initial pool masses
-    I_1_0 = S_Iss_0./hill(X_B_0,m_I1_,h_I1_,n_I1_);
+    I_1_0 = R_Iss_0./hill(X_B_0,m_I1_,h_I1_,n_I1_);
     I_2_0 = hill(X_B_0,m_I1_,h_I1_,n_I1_).*I_1_0./hill(X_B_0,m_I2_,h_I2_,n_I2_);
 
-    G_1_0 = S_Gss_0./hill(X_A_0,m_G1_,h_G1_,n_G1_);
+    G_1_0 = R_Gss_0./hill(X_A_0,m_G1_,h_G1_,n_G1_);
     G_2_0 = hill(X_A_0,m_G1_,h_G1_,n_G1_).*G_1_0./hill(X_A_0,m_G2_,h_G2_,n_G2_);
 
     %Store initial condititions and time values for integration
@@ -86,7 +86,7 @@ function [t,y] = simulate_alphaBetaModel_perfusion(params,g_t_in,G_t_in,I_t_in,t
     X_I = y(:,8);
 
 
-    %Calculate X_B, X_A, S_I, and S_G
+    %Calculate X_B, X_A, R_I, and R_G
 
     %Make placeholder arrays
     X_B = zeros(length(t),1);
@@ -101,25 +101,25 @@ function [t,y] = simulate_alphaBetaModel_perfusion(params,g_t_in,G_t_in,I_t_in,t
     %This is the measured insulin/glucagon out flow rate
         %Will need to subtract out I_t_in and G_t_in to isolate the insulin
         %or glucagon secretion rate from only beta or alpha cells.
-    S_I = Q_.*I;
-    S_G = Q_.*G;
+    R_I = Q_.*I;
+    R_G = Q_.*G;
 
     %Store the calculated net signals and secretion with the results of the
     %system of odes to return from this function
-    y = [y X_B S_I X_A S_G];
+    y = [y X_B R_I X_A R_G];
 
 
 end
 
 
 % Additional functions
-function s = S_Gss(X_a,m_a,h_a,n_a)
-    %S_Gss represents the steady-state glucagon secretion function
+function s = R_Gss(X_a,m_a,h_a,n_a)
+    %R_Gss represents the steady-state glucagon secretion function
     s = hill(X_a,m_a,h_a,n_a); %mg/min/islet
 end 
 
-function s = S_Iss(X_b,m_b,h_b,n_b)
-    %S_Iss represents the steady-state insulin secretion function
+function s = R_Iss(X_b,m_b,h_b,n_b)
+    %R_Iss represents the steady-state insulin secretion function
     s = hill(X_b,m_b,h_b,n_b); %mg/min/islet
 end
 
@@ -178,11 +178,11 @@ function r = SS_equations(x,params,g_t_in,G_t_in,I_t_in)
     X_A = Y_A(X_gA_0,X_I,h_IA_,n_IA_,X_A0_,m_g_);
 
     %Steady-state secretion - at SS, only need this, not transient portion
-    S_Iss_ = S_Iss(X_B,m_I_,h_I_,n_I_);
-    S_Gss_ = S_Gss(X_A,m_G_,h_G_,n_G_);
+    R_Iss_ = R_Iss(X_B,m_I_,h_I_,n_I_);
+    R_Gss_ = R_Gss(X_A,m_G_,h_G_,n_G_);
     
     %Mass balances - perfusion
-    r(1) = Q_.*(I_t_in(0) - I) + S_Iss_; %Perfusion 
-    r(2) = Q_.*(G_t_in(0) - G) + S_Gss_; %Perfusion 
+    r(1) = Q_.*(I_t_in(0) - I) + R_Iss_; %Perfusion 
+    r(2) = Q_.*(G_t_in(0) - G) + R_Gss_; %Perfusion 
 
 end

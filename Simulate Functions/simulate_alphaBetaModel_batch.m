@@ -39,14 +39,14 @@ function [t,y] = simulate_alphaBetaModel_batch(params,g_t,I_0,G_0,t)
     X_A_0 = Y_A(X_gA_0,X_I_0,h_IA_,n_IA_,X_A0_,m_g_);
 
     %Initial steady-state secretion rates
-    S_Iss_0 = S_Iss(X_B_0,m_I_,h_I_,n_I_);
-    S_Gss_0 = S_Gss(X_A_0,m_G_,h_G_,n_G_);
+    R_Iss_0 = R_Iss(X_B_0,m_I_,h_I_,n_I_);
+    R_Gss_0 = R_Gss(X_A_0,m_G_,h_G_,n_G_);
 
     %Initial pool masses
-    I_1_0 = S_Iss_0./hill(X_B_0,m_I1_,h_I1_,n_I1_);
+    I_1_0 = R_Iss_0./hill(X_B_0,m_I1_,h_I1_,n_I1_);
     I_2_0 = hill(X_B_0,m_I1_,h_I1_,n_I1_).*I_1_0./hill(X_B_0,m_I2_,h_I2_,n_I2_);
 
-    G_1_0 = S_Gss_0./hill(X_A_0,m_G1_,h_G1_,n_G1_);
+    G_1_0 = R_Gss_0./hill(X_A_0,m_G1_,h_G1_,n_G1_);
     G_2_0 = hill(X_A_0,m_G1_,h_G1_,n_G1_).*G_1_0./hill(X_A_0,m_G2_,h_G2_,n_G2_);
 
     %Store initial condititions and time values for integration
@@ -71,40 +71,40 @@ function [t,y] = simulate_alphaBetaModel_batch(params,g_t,I_0,G_0,t)
     G_2 = y(:,10);
 
 
-    %Calculate X_B, X_A, S_I, and S_G
+    %Calculate X_B, X_A, R_I, and R_G
 
     %Make placeholder arrays
     X_B = zeros(length(t),1);
-    S_I = zeros(length(t),1);
+    R_I = zeros(length(t),1);
     X_A = zeros(length(t),1);
-    S_G = zeros(length(t),1);
+    R_G = zeros(length(t),1);
 
     for i = 1:length(t) %Cycle over time values to calculate signals and 
                         %secretion at each time
 
         X_B(i) = Y_B(X_gB(i),X_G(i),m_GB_,h_GB_,n_GB_,h_gB_,n_gB_,X_B0_);
-        S_I(i) = hill(X_B(i),m_I2_,h_I2_,n_I2_).*I_2(i);
+        R_I(i) = hill(X_B(i),m_I2_,h_I2_,n_I2_).*I_2(i);
 
         X_A(i) = Y_A(X_gA(i),X_I(i),h_IA_,n_IA_,X_A0_,m_g_);
-        S_G(i) = hill(X_A(i),m_G2_,h_G2_,n_G2_).*G_2(i);
+        R_G(i) = hill(X_A(i),m_G2_,h_G2_,n_G2_).*G_2(i);
     end
 
     %Store the calculated net signals and secretion with the results of the
     %system of odes to return from this function
-    y = [y X_B S_I X_A S_G];
+    y = [y X_B R_I X_A R_G];
 
 
 end
 
 
 % Additional functions
-function s = S_Gss(X_a,m_a,h_a,n_a)
-    %S_Gss represents the steady-state glucagon secretion function
+function s = R_Gss(X_a,m_a,h_a,n_a)
+    %R_Gss represents the steady-state glucagon secretion function
     s = hill(X_a,m_a,h_a,n_a); %mg/min/islet
 end 
 
-function s = S_Iss(X_b,m_b,h_b,n_b)
-    %S_Iss represents the steady-state insulin secretion function
+function s = R_Iss(X_b,m_b,h_b,n_b)
+    %R_Iss represents the steady-state insulin secretion function
     s = hill(X_b,m_b,h_b,n_b); %mg/min/islet
 end
 

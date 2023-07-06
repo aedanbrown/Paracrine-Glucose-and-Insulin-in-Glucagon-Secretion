@@ -109,16 +109,16 @@ G_0_ = G_0_c; %mg/dL - glucagon concentration before step
 t_ = 0:0.1:60; %min - time range to examine
 
 n = length(g_up_vals);
-S_I = zeros(n,1);
-S_G = zeros(n,1);
+R_I = zeros(n,1);
+R_G = zeros(n,1);
 
 for i = 1:n
     g_t_ = @(t) g_0_ + (t > 0).*(g_up_vals(i).*18.016 - g_0_);
 
     [~,y_] = simulate_alphaBetaModel_batch(params_,g_t_,I_0_,G_0_,t_);
     
-    S_I(i) = y_(end,1).*V_P_ - I_0_.*V_P_;
-    S_G(i) = y_(end,2).*V_P_ - G_0_.*V_P_;
+    R_I(i) = y_(end,1).*V_P_ - I_0_.*V_P_;
+    R_G(i) = y_(end,2).*V_P_ - G_0_.*V_P_;
     
 end
 
